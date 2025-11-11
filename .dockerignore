@@ -1,0 +1,45 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Environment
+.env
+.env.local
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Documentation (optional - include if you want them in container)
+# *.md
+
+# Tests
+test_*.py
+*_test.py
+
+# Temporary files
+*.log
+*.tmp
+.DS_Store
+
+# ChromaDB (if using old RAG system)
+chroma_db/
+
+# Sample files
+sample/
+demo_output/
+correct_sample/
+

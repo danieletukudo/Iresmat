@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Construction Materials Search System</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">
+                    <svg class="logo-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="2" width="28" height="28" stroke="currentColor" stroke-width="2"/>
+                        <path d="M8 12H24M8 16H24M8 20H24" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                    Material Search System
+                </h1>
+                <p class="subtitle">Advanced construction materials database and search</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Tab Navigation -->
+            <div class="tabs">
+                <button class="tab-button active" data-tab="search">
+                    <svg class="tab-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2"/>
+                        <path d="M13 13L18 18" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                    Text Search
+                </button>
+                <button class="tab-button" data-tab="upload">
+                    <svg class="tab-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10 2V12M10 2L6 6M10 2L14 6" stroke="currentColor" stroke-width="2"/>
+                        <path d="M2 12V16C2 17.1046 2.89543 18 4 18H16C17.1046 18 18 17.1046 18 16V12" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                    Upload File
+                </button>
+            </div>
+
+            <!-- Search Tab Content -->
+            <div class="tab-content active" data-content="search">
+                <!-- Step 1: Upload Materials List -->
+                <div class="card" id="uploadListCard">
+                    <div class="card-header">
+                        <h2 class="card-title">Step 1: Upload Materials List</h2>
+                        <p class="card-description">Upload your resume/materials text file (.txt) that contains all available materials</p>
+                    </div>
+                    <div class="card-body">
+                        <form id="uploadListForm" class="form">
+                            <div class="upload-area" id="uploadListArea">
+                                <svg class="upload-icon" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M24 8V32M24 8L16 16M24 8L32 16" stroke="currentColor" stroke-width="3"/>
+                                    <path d="M8 32V38C8 39.1046 8.89543 40 10 40H38C39.1046 40 40 38V32" stroke="currentColor" stroke-width="3"/>
+                                </svg>
+                                <p class="upload-text">
+                                    <span class="upload-text-primary">Click to upload materials list</span>
+                                    <span class="upload-text-secondary">or drag and drop</span>
+                                </p>
+                                <p class="upload-hint">Text file only (.txt) · Max 10MB</p>
+                                <input 
+                                    type="file" 
+                                    id="listFileInput" 
+                                    class="upload-input" 
+                                    accept=".txt"
+                                    required
+                                >
+                            </div>
+                            <div class="file-info" id="listFileInfo" style="display: none;">
+                                <div class="file-preview">
+                                    <svg class="file-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M7 2H15L20 7V20C20 21.1046 19.1046 22 18 22H7C5.89543 22 5 21.1046 5 20V4C5 2.89543 5.89543 2 7 2Z" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M15 2V7H20" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    <div class="file-details">
+                                        <span class="file-name" id="listFileName"></span>
+                                        <span class="file-size" id="listFileSize"></span>
+                                    </div>
+                                    <button type="button" class="btn-remove" id="removeListFile" aria-label="Remove file">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="2"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="uploadListButton">
+                                <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 2V10M8 2L5 5M8 2L11 5" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M2 10V13C2 13.5523 2.44772 14 3 14H13C13.5523 14 14 13.5523 14 13V10" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                                Load Materials List
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Step 2: Search Materials -->
+                <div class="card" id="searchCard" style="display: none;">
+                    <div class="card-header">
+                        <h2 class="card-title">Step 2: Search by Description</h2>
+                        <p class="card-description">Enter a description to find matching construction materials using AI-powered GPT-4o</p>
+                        <div class="materials-loaded-badge">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="8" cy="8" r="6" fill="var(--success)" stroke="white" stroke-width="2"/>
+                                <path d="M5 8L7 10L11 6" stroke="white" stroke-width="2"/>
+                            </svg>
+                            <span id="materialsCount">0 materials loaded</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form id="searchForm" class="form">
+                            <div class="form-group">
+                                <label for="searchInput" class="form-label">Material Description</label>
+                                <textarea 
+                                    id="searchInput" 
+                                    class="form-control" 
+                                    rows="6" 
+                                    placeholder="e.g., REPARACION DE FRENTE DE FORJADO CON PROPAM REPAR 40
+
+or: limpieza de alicatado cerámico
+
+or: demolición de aplacado pétreo"
+                                    required
+                                ></textarea>
+                                <span class="form-hint">Describe the construction work or material you're looking for</span>
+                            </div>
+                            <div class="form-group">
+                                <label for="topK" class="form-label">Number of Results</label>
+                                <div class="slider-group">
+                                    <input 
+                                        type="range" 
+                                        id="topK" 
+                                        class="form-slider" 
+                                        min="1" 
+                                        max="20" 
+                                        value="5"
+                                    >
+                                    <span class="slider-value" id="topKValue">5</span>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary" id="changeListButton">
+                                    <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M2 8H14M2 8L6 4M2 8L6 12" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    Change Materials List
+                                </button>
+                                <button type="submit" class="btn btn-primary" id="searchButton">
+                                    <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M10 10L14 14" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    Search Materials
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Tab Content -->
+            <div class="tab-content" data-content="upload">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Upload Database File</h2>
+                        <p class="card-description">Upload an Excel file (.xlsx or .xls) to extract all material information</p>
+                    </div>
+                    <div class="card-body">
+                        <form id="uploadForm" class="form">
+                            <div class="upload-area" id="uploadArea">
+                                <svg class="upload-icon" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M24 8V32M24 8L16 16M24 8L32 16" stroke="currentColor" stroke-width="3"/>
+                                    <path d="M8 32V38C8 39.1046 8.89543 40 10 40H38C39.1046 40 40 39.1046 40 38V32" stroke="currentColor" stroke-width="3"/>
+                                </svg>
+                                <p class="upload-text">
+                                    <span class="upload-text-primary">Click to upload</span>
+                                    <span class="upload-text-secondary">or drag and drop</span>
+                                </p>
+                                <p class="upload-hint">Excel files only (.xlsx, .xls) · Max 16MB</p>
+                                <input 
+                                    type="file" 
+                                    id="fileInput" 
+                                    class="upload-input" 
+                                    accept=".xlsx,.xls"
+                                    required
+                                >
+                            </div>
+                            <div class="file-info" id="fileInfo" style="display: none;">
+                                <div class="file-preview">
+                                    <svg class="file-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M7 2H15L20 7V20C20 21.1046 19.1046 22 18 22H7C5.89543 22 5 21.1046 5 20V4C5 2.89543 5.89543 2 7 2Z" stroke="currentColor" stroke-width="2"/>
+                                        <path d="M15 2V7H20" stroke="currentColor" stroke-width="2"/>
+                                    </svg>
+                                    <div class="file-details">
+                                        <span class="file-name" id="fileName"></span>
+                                        <span class="file-size" id="fileSize"></span>
+                                    </div>
+                                    <button type="button" class="btn-remove" id="removeFile" aria-label="Remove file">
+                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="2"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="uploadType" class="form-label">Output Type</label>
+                                <select id="uploadType" class="form-select">
+                                    <option value="upload">Standard (with codes)</option>
+                                    <option value="upload/text-only">Text only (no codes)</option>
+                                    <option value="upload/details">Full details (with prices)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="uploadButton">
+                                <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 2V10M8 2L5 5M8 2L11 5" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M2 10V13C2 13.5523 2.44772 14 3 14H13C13.5523 14 14 13.5523 14 13V10" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                                Process File
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Results</h2>
+                        <div class="card-actions">
+                            <button class="btn btn-secondary" id="downloadResults">
+                                <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 2V10M8 10L5 7M8 10L11 7" stroke="currentColor" stroke-width="2"/>
+                                    <path d="M2 12V13C2 13.5523 2.44772 14 3 14H13C13.5523 14 14 13.5523 14 13V12" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                                Download
+                            </button>
+                            <button class="btn btn-secondary" id="clearResults">
+                                <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="2"/>
+                                </svg>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="results-stats" id="resultsStats"></div>
+                        <div class="results-content" id="resultsContent"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading Overlay -->
+            <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                    <p class="loading-text">Processing your request...</p>
+                </div>
+            </div>
+
+            <!-- Alert Container -->
+            <div class="alert-container" id="alertContainer"></div>
+        </main>
+
+        <footer class="footer">
+            <p class="footer-text">
+                © 2025 Construction Materials Search System · 
+                <a href="/api/docs" class="footer-link" target="_blank">API Documentation</a>
+            </p>
+        </footer>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
+

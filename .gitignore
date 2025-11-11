@@ -1,0 +1,17 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# API Keys
+*.key
+secrets.txt
+.env
+__pycache__/
+*.pyc
